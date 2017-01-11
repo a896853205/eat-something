@@ -1,8 +1,38 @@
 /* Base Application Styles */
 
 /* base -- start */
-body {
-  color: #fff;
-  background: #d6fff7;
+body,html {
+  background: #fffdff;
+  width:100%;
+  height:100%;
+  padding:0;
 }
 /* base -- end */
+
+/* RandomMain -- start */
+.info-main-div{
+  width:170px;
+  position:absolute;
+  top:calc(50% - 90px);
+  left:calc(50% - 85px);
+}
+.info-show-div{
+  width:100%;
+  font-size:30px;
+  color:rgb(81,164,206);
+  text-align:center;
+}
+.info-control-button{
+  width:100%;
+  height:40px;
+  border-radius:20px;
+  margin-top:20px;
+  background:rgb(81,164,206);
+  border:0;
+  color:#fffdff;
+  cursor:pointer;
+}
+.info-control-button:hover{
+  background: rgb(79, 151, 193);
+}
+/* RandomMain -- end */
