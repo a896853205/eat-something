@@ -17,10 +17,12 @@ body,html {
   left:calc(50% - 85px);
 }
 .info-show-div{
-  width:100%;
+  width:0;
+  height:88px;
   font-size:30px;
   color:rgb(81,164,206);
   text-align:center;
+  transition:.5s;
 }
 .info-control-button{
   width:100%;

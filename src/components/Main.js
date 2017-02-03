@@ -10,24 +10,48 @@ let randomArray = array => {
   return array[index];
 };
 
+/* 显示控件 */
+class ShowMain extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      showData:"中午吃什么呢?",
+      unRandomRun:true
+    };
+  };
+  changeShow(){
+    this.setState({unRandomRun:false});
+    setInterval(() => {
+      this.setState({showData:randomArray(FOODARRAY)});
+    },1000);
+  };
+  render(){
+    if(this.state.unRandomRun && this.props.showToggle)
+       this.changeShow();
+    return (
+      <div className="info-show-div">
+        {this.state.showData}
+      </div>
+    );
+  }
+}
+
 /* 中间控件 */
 class RandomMain extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      showInfo:"中午吃什么呢?"
+      showToggle:false
     };
   };
-  changeShow(){
-    setInterval(() => {
-      this.setState({showInfo:randomArray(FOODARRAY)});
-    },100);
+  showInfo(){
+    this.setState({showToggle:!this.state.showToggle});
   };
   render() {
     return (
       <div className="info-main-div">
-        <div className="info-show-div">{this.state.showInfo}</div>
-        <button className="info-control-button" onClick={this.changeShow.bind(this)}>看看吃啥</button>
+        <ShowMain className="info-show-div" showToggle={this.state.showToggle} />
+        <button className="info-control-button" onClick={this.showInfo.bind(this)}>看看吃啥</button>
       </div>
     );
   }
