@@ -4,6 +4,8 @@ require('styles/App.css');
 import React from 'react';
 /*食物随机数组*/
 const FOODARRAY = ["腊汁肉拌饭","淮南牛肉汤饭","老林子鸡鸡腿"];
+/*间隔时间*/
+const INTERVALTIME = 100;
 /* 随机函数*/
 let randomArray = array => {
   let index = Math.floor(Math.random()*array.length);
@@ -12,28 +14,69 @@ let randomArray = array => {
 
 /* 显示控件 */
 class ShowMain extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      showData:"中午吃什么呢?",
-      unRandomRun:true
+    smoothRandom = {
+        smoothTime:1,
     };
-  };
-  changeShow(){
-    this.setState({unRandomRun:false});
-    setInterval(() => {
-      this.setState({showData:randomArray(FOODARRAY)});
-    },1000);
-  };
-  render(){
-    if(this.state.unRandomRun && this.props.showToggle)
-       this.changeShow();
-    return (
-      <div className="info-show-div">
-        {this.state.showData}
-      </div>
-    );
-  }
+    intervalToggle = null;
+    runState = "stop";
+    constructor(props){
+        super(props);
+        this.state = {
+            showData:"中午吃什么呢?",
+            overStyle:null
+        };
+    };
+    changeShow(){
+        this.runState = "random";
+        this.intervalToggle = setInterval(() => {
+           this.setState({showData:randomArray(FOODARRAY),overStyle:null});
+        },INTERVALTIME);
+    };
+    smoothShow(styleObj = {},time = 3){
+        let smoothR = this.smoothRandom;
+        if(smoothR.smoothTime <= time) {
+            smoothR.smoothTime++;
+            setTimeout(() => {
+                this.setState({showData: randomArray(FOODARRAY)});
+            }, (INTERVALTIME + 50) * smoothR.smoothTime);
+        }else{
+            smoothR.smoothTime = 0;
+            this.runState = "stop";
+            this.setState({overStyle:styleObj});
+        }
+    }
+    componentDidUpdate(){
+        switch(this.runState) {
+            //停滞状态
+            case "stop":
+                if(this.props.showToggle)
+                    this.changeShow();
+                break;
+            //随机状态
+            case "random":
+                if(!this.props.showToggle) {
+                    this.runState = "smooth";
+                    clearInterval(this.intervalToggle);
+                }else
+                    break;
+            //缓慢结束状态
+            case "smooth":
+                let tmpOverStyle = {
+                    "fontWeight":800,
+                    "color":'rgb(89, 149, 206)'
+                };
+                this.smoothShow(tmpOverStyle,3);
+                break;
+        }
+    }
+    render(){
+        return (
+            <div className="info-show-div" style={this.state.overStyle}>
+                <div className="info-show-div-cover"></div>
+                {this.state.showData}
+            </div>
+      );
+    }
 }
 
 /* 中间控件 */
