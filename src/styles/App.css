@@ -59,3 +59,20 @@ body,html {
   background: rgb(79, 151, 193);
 }
 /* RandomMain -- end */
+/* BackGround -- start */
+.background-div{
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+@keyframes backDetail {
+    0% {opacity:0;}
+    50% {opacity:1;}
+    100% {opacity:0;}
+}
+.back-detail{
+    animation:backDetail 1s infinite;
+    opacity:0;
+    position:absolute;
+}
+/* BackGround -- end */
