@@ -71,8 +71,11 @@ body,html {
     100% {opacity:0;}
 }
 .back-detail{
-    animation:backDetail 1s infinite;
+    animation:backDetail 1s;
     opacity:0;
     position:absolute;
+}
+.back-detail-none{
+    opacity:0;
 }
 /* BackGround -- end */

@@ -2,6 +2,8 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
+import ReactDOM from 'react-dom';
+import jQuery from 'jquery';
 /*食物随机数组*/
 const FOODARRAY = ["腊汁肉拌饭","淮南牛肉汤饭","老林子鸡鸡腿"];
 const INTERVALTIME = 100;                      //间隔时间
@@ -110,12 +112,47 @@ class RandomMain extends React.Component {
 
 /* 背景详细控件 */
 class BackDetail extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            x:randomIntNum(WINWIDH),
+            y:randomIntNum(WINHEIGHT),
+            context:randomArray(FOODARRAY),
+            delay:randomNum(5)
+        };
+    };
+    build(){
+        let detail = ReactDOM.findDOMNode(this);
+        console.log(this.props.flag);
+        //判断是否超出
+        setTimeout(()=>{
+            $(detail).animate({"opacity":"1"},600,()=>{
+                $(detail).animate({"opacity":"0"},600,()=>{
+                    if(this.props.flag){
+                        this.setState({
+                            x:randomIntNum(WINWIDH),
+                            y:randomIntNum(WINHEIGHT),
+                            context:randomArray(FOODARRAY),
+                        });
+                    }else{
+                        
+                    }
+                });
+            });
+        },randomNum(5)*1000);
+    }
     render(){
         return (
-            <div className="back-detail" style={{left:this.props.pos.x,top:this.props.pos.y}}>
-                {this.props.context}
+            <div style={{left:this.state.x,top:this.state.y,position:'absolute',opacity:'0'}}>
+                {this.state.context}
             </div>
         );
+    }
+/*    componentDidMount(){
+        this.build();
+    }*/
+    componentDidUpdate(){
+        this.build();
     }
 }
 
@@ -123,16 +160,25 @@ class BackDetail extends React.Component{
 class BackGround extends React.Component{
     constructor(props){
         super(props);
-        /*this.state = {
-            backToggle:false
-        };*/
     };
+    flag:false;
     runState = 'stop';
     details = [];
     render(){
         return (
             <div className="background-div">
-                {this.details}
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
+                <BackDetail flag={this.flag}/>
             </div>
         );
     };
@@ -141,12 +187,17 @@ class BackGround extends React.Component{
             case 'stop':
                 if(this.props.backToggle){
                     //开始渲染详细控件
-
+                    this.flag = true;
                     this.runState = 'run';
+                    this.setState({});
+                    alert(0);
                 }
             case 'run':
                 if(!this.props.backToggle){
+                    this.flag = false;
                     this.runState = 'stop';
+                    //this.setState({});
+                    alert(this.runState);
                 }
         }
     }
