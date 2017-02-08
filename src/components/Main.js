@@ -3,9 +3,8 @@ require('styles/App.css');
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import jQuery from 'jquery';
 /*食物随机数组*/
-const FOODARRAY = ["腊汁肉拌饭","淮南牛肉汤饭","老林子鸡鸡腿"];
+const FOODARRAY = ["腊汁肉拌饭","淮南牛肉汤饭","老林子鸡鸡腿","砂锅扯面","周记盒饭","旋转小火锅","黄焖鸡米饭","夏小面","玛咖鸡黄饭","郎朗水饺"];
 const INTERVALTIME = 100;                      //间隔时间
 const WINWIDH = document.body.clientWidth;     //屏幕宽度
 const WINHEIGHT = document.body.clientHeight;  //屏幕高度
@@ -30,8 +29,22 @@ class ShowMain extends React.Component{
     runState = "stop";
     constructor(props){
         super(props);
+        let time = new Date();
+        let hour = time.getHours();
+        let showMain = "";
+        if(hour > 0 && hour <= 4){
+            showMain = "熬夜吃点什么呢?";
+        }else if(hour > 4 && hour <= 9){
+            showMain = "早上吃点什么呢?";
+        }else if(hour > 9 && hour <= 13){
+            showMain = "中午吃点什么呢?";
+        }else if(hour > 13 && hour <= 21){
+            showMain = "下午吃点什么呢?";
+        }else if(hour > 21 && hour <= 24){
+            showMain = "夜宵吃点什么呢?";
+        }
         this.state = {
-            showData:"中午吃什么呢?",
+            showData:showMain,
             overStyle:null
         };
     };
@@ -53,7 +66,7 @@ class ShowMain extends React.Component{
             this.runState = "stop";
             this.setState({overStyle:styleObj});
         }
-    }
+    };
     componentDidUpdate(){
         switch(this.runState) {
             //停滞状态
@@ -77,7 +90,7 @@ class ShowMain extends React.Component{
                 this.smoothShow(tmpOverStyle,3);
                 break;
         }
-    }
+    };
     render(){
         return (
             <div className="info-show-div" style={this.state.overStyle}>
@@ -85,7 +98,7 @@ class ShowMain extends React.Component{
                 {this.state.showData}
             </div>
       );
-    }
+    };
 }
 
 /* 中间控件 */
@@ -93,21 +106,26 @@ class RandomMain extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            showToggle:false
+            showToggle:false,
+            buttonContext:"看看吃啥"
         };
     };
     showInfo(){
         this.props.backControl();
-        this.setState({showToggle:!this.state.showToggle});
+        let tmpButtonContext = "停!";
+        if(this.state.buttonContext === "停!"){
+            tmpButtonContext = "不满意再来一次";
+        }
+        this.setState({showToggle:!this.state.showToggle,buttonContext:tmpButtonContext});
     };
     render() {
         return (
             <div className="info-main-div">
                 <ShowMain className="info-show-div" showToggle={this.state.showToggle} />
-                <button className="info-control-button" onClick={this.showInfo.bind(this)}>看看吃啥</button>
+                <button className="info-control-button" onClick={this.showInfo.bind(this)}>{this.state.buttonContext}</button>
             </div>
         );
-    }
+    };
 }
 
 /* 背景详细控件 */
@@ -115,45 +133,50 @@ class BackDetail extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            x:randomIntNum(WINWIDH),
-            y:randomIntNum(WINHEIGHT),
+            x: randomIntNum(WINWIDH),
+            y: randomIntNum(WINHEIGHT),
             context:randomArray(FOODARRAY),
-            delay:randomNum(5)
+            delay:randomNum(4)
         };
+    };
+    judgeOut(dom = null){
+        return parseInt($(dom).css("width")) + parseInt($(dom).css("left")) > WINWIDH || parseInt($(dom).css("height")) + parseInt($(dom).css("top")) > WINHEIGHT ?  true :  false;
     };
     build(){
         let detail = ReactDOM.findDOMNode(this);
-        console.log(this.props.flag);
         //判断是否超出
-        setTimeout(()=>{
-            $(detail).animate({"opacity":"1"},600,()=>{
-                $(detail).animate({"opacity":"0"},600,()=>{
-                    if(this.props.flag){
-                        this.setState({
-                            x:randomIntNum(WINWIDH),
-                            y:randomIntNum(WINHEIGHT),
-                            context:randomArray(FOODARRAY),
-                        });
-                    }else{
-                        
-                    }
+        if(this.judgeOut(detail)) {
+            if (this.props.flag)
+                this.setState({
+                    x: randomIntNum(WINWIDH),
+                    y: randomIntNum(WINHEIGHT),
+                    context: randomArray(FOODARRAY),
                 });
-            });
-        },randomNum(5)*1000);
-    }
+        }else
+            setTimeout(()=>{
+                $(detail).animate({"opacity":"1"},600,()=>{
+                    $(detail).animate({"opacity":"0"},600,()=>{
+                        if(this.props.flag){
+                            this.setState({
+                                x:randomIntNum(WINWIDH),
+                                y:randomIntNum(WINHEIGHT),
+                                context:randomArray(FOODARRAY),
+                            });
+                        }
+                    });
+                });
+            },randomNum(5)*1000);
+    };
     render(){
         return (
-            <div style={{left:this.state.x,top:this.state.y,position:'absolute',opacity:'0'}}>
+            <div className="back-detail" style={{left:this.state.x,top:this.state.y}}>
                 {this.state.context}
             </div>
         );
-    }
-/*    componentDidMount(){
-        this.build();
-    }*/
+    };
     componentDidUpdate(){
         this.build();
-    }
+    };
 }
 
 /* 背景控件 */
@@ -163,13 +186,9 @@ class BackGround extends React.Component{
     };
     flag:false;
     runState = 'stop';
-    details = [];
     render(){
         return (
             <div className="background-div">
-                <BackDetail flag={this.flag}/>
-                <BackDetail flag={this.flag}/>
-                <BackDetail flag={this.flag}/>
                 <BackDetail flag={this.flag}/>
                 <BackDetail flag={this.flag}/>
                 <BackDetail flag={this.flag}/>
@@ -190,17 +209,16 @@ class BackGround extends React.Component{
                     this.flag = true;
                     this.runState = 'run';
                     this.setState({});
-                    alert(0);
                 }
+                break;
             case 'run':
                 if(!this.props.backToggle){
                     this.flag = false;
                     this.runState = 'stop';
-                    //this.setState({});
-                    alert(this.runState);
+                    this.setState({});
                 }
         }
-    }
+    };
 }
 
 /* 主舞台控件 */
