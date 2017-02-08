@@ -28,15 +28,16 @@ body,html {
     100% {color:rgb(81,164,206);}
 }
 .info-show-div{
-  position:relative;
-  width:100%;
-  padding:8px 10%;
-  box-sizing:border-box;
-  font-size:30px;
-  color:#fffdff;
-  text-align:center;
-  animation:initShow .5s forwards;
-  animation-delay:.5s;
+    position:relative;
+    width:100%;
+    padding:8px 10%;
+    box-sizing:border-box;
+    font-size:30px;
+    color:#fffdff;
+    text-align:center;
+    animation:initShow .5s forwards;
+    -webkit-animation:initShow .5s forwards;
+    animation-delay:.5s;
 }
 @keyframes initShowCover{
     0%  {width:0;}
@@ -50,13 +51,14 @@ body,html {
 }
 
 .info-show-div-cover{
-  position:absolute;
-  top:0;
-  width:0;
-  height:100%;
-  font-size:0;
-  background:rgb(81,164,206);
-  animation:initShowCover 1s;
+    position:absolute;
+    top:0;
+    width:0;
+    height:100%;
+    font-size:0;
+    background:rgb(81,164,206);
+    animation:initShowCover 1s;
+    -webkit-animation:initShowCover 1s;
 }
 .info-control-button{
   width:150px;
