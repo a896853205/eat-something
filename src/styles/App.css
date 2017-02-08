@@ -38,6 +38,7 @@ body,html {
     animation:initShow .5s forwards;
     -webkit-animation:initShow .5s forwards;
     animation-delay:.5s;
+    -webkit-animation-delay:.5s;
 }
 @keyframes initShowCover{
     0%  {width:0;}
