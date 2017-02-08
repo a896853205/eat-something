@@ -136,36 +136,36 @@ class BackDetail extends React.Component{
             x: randomIntNum(WINWIDH),
             y: randomIntNum(WINHEIGHT),
             context:randomArray(FOODARRAY),
-            delay:randomNum(4)
+            delay:randomNum(1)
         };
     };
     judgeOut(dom = null){
         return parseInt($(dom).css("width")) + parseInt($(dom).css("left")) > WINWIDH || parseInt($(dom).css("height")) + parseInt($(dom).css("top")) > WINHEIGHT ?  true :  false;
     };
-    build(){
+    build() {
         let detail = ReactDOM.findDOMNode(this);
+        console.log(this.props.flag);
         //判断是否超出
-        if(this.judgeOut(detail)) {
-            if (this.props.flag)
-                this.setState({
-                    x: randomIntNum(WINWIDH),
-                    y: randomIntNum(WINHEIGHT),
-                    context: randomArray(FOODARRAY),
-                });
-        }else
-            setTimeout(()=>{
-                $(detail).animate({"opacity":"1"},600,()=>{
-                    $(detail).animate({"opacity":"0"},600,()=>{
-                        if(this.props.flag){
-                            this.setState({
-                                x:randomIntNum(WINWIDH),
-                                y:randomIntNum(WINHEIGHT),
-                                context:randomArray(FOODARRAY),
-                            });
-                        }
+        if (this.props.flag) {
+            if (this.judgeOut(detail)) {
+                    this.setState({
+                        x: randomIntNum(WINWIDH),
+                        y: randomIntNum(WINHEIGHT),
+                        context: randomArray(FOODARRAY),
                     });
-                });
-            },randomNum(5)*1000);
+            } else
+                setTimeout(() => {
+                    $(detail).animate({"opacity": "1"}, 600, () => {
+                        $(detail).animate({"opacity": "0"}, 600, () => {
+                            this.setState({
+                                x: randomIntNum(WINWIDH),
+                                y: randomIntNum(WINHEIGHT),
+                                context: randomArray(FOODARRAY),
+                            });
+                        });
+                    });
+                },this.state.delay * 1000);
+        }
     };
     render(){
         return (
