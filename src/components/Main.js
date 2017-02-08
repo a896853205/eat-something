@@ -32,7 +32,7 @@ class ShowMain extends React.Component{
         let time = new Date();
         let hour = time.getHours();
         let showMain = "";
-        if(hour > 0 && hour <= 4){
+        if(hour >= 0 && hour <= 4){
             showMain = "熬夜吃点什么呢?";
         }else if(hour > 4 && hour <= 9){
             showMain = "早上吃点什么呢?";
